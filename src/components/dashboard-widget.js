@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faCalendar, faCalendarPlus, faCalendarMinus } from '@fortawesome/free-solid-svg-icons'
 import { Card, CardBody, CardHeader, Table, Button } from 'reactstrap'
+
+/** Controlers */
+import { listTask, deleteTask } from '../controlers/crud-task'
+
+/** Components */
+import AddTaskModal from './add-task'
 
 library.add([faChevronRight, faCalendar, faCalendarPlus, faCalendarMinus]) // Add icon to use
 
@@ -20,40 +26,44 @@ const ItemList = (props) => (
 )
 
 const Itens = (props) => {
-  const data = props.data
+  let data = listTask(props.pet, props.widget)
+  /** Return message if empty data */
+  if (!data.length) return (<React.Fragment><tr></tr><tr><td className="text-muted text-center px-3 py-4">Não há agendamentos.</td></tr></React.Fragment>)
   const render = []
   /** Loop data */
   data.forEach(item => {
-    render.push(<ItemList key={item.id} buttonDelete={props.buttonDelete ? () => props.buttonDelete(item.id) : null} />)
+    render.push(<ItemList key={item.id} buttonDelete={props.widget !== 'today' ? () => deleteTask(props.widget, item.id) : null} />)
   })
   return render
 }
 
 const Widget = (props) => {
+  /** Modals */
+  const [showAddTask, setShowAddTask] = useState(false) // Create food tasks
+
   return (
-    <Card style={{ borderRadius: 0 }}>
-      <CardHeader tag="h6" className="text-center text-uppercase font-weight-light">{props.title}</CardHeader>
-      <CardBody className="p-0" style={{ height: props.buttonAdd ? '250px' : '280px', overflow: 'auto' }}>
-        {!props.data ? (
-          <p className="text-muted text-center px-3 py-4">Não há agendamentos para {props.title}.</p>
-        ) : (
-            <Table className="m-0" size="sm" responsive borderless striped hover>
-              <tbody>
-                <Itens buttonDelete={props.buttonDelete} data={props.data} />
-              </tbody>
-            </Table>
-          )}
-      </CardBody >
-      {
-        props.buttonAdd ? (
-          <CardBody className="p-0">
-            <Button size="sm" block onClick={props.buttonAdd} style={{ borderRadius: 0 }} className="text-uppercase font-weight-bold">
-              <FontAwesomeIcon icon="calendar-plus" /> Adicionar novo
+    <React.Fragment>
+      <Card style={{ borderRadius: 0 }}>
+        <CardHeader tag="h6" className="text-center text-uppercase font-weight-light">{props.title}</CardHeader>
+        <CardBody className="p-0" style={{ height: !props.noButton ? '250px' : '280px', overflow: 'auto' }}>
+          <Table className="m-0" size="sm" responsive borderless striped hover>
+            <tbody>
+              <Itens pet={props.pet} widget={props.widget} />
+            </tbody>
+          </Table>
+        </CardBody >
+        {
+          !props.noButton ? (
+            <CardBody className="p-0">
+              <Button size="sm" block onClick={() => setShowAddTask(true)} style={{ borderRadius: 0 }} className="text-uppercase font-weight-bold">
+                <FontAwesomeIcon icon="calendar-plus" /> Adicionar novo
             </Button>
-          </CardBody>
-        ) : null
-      }
-    </Card >
+            </CardBody>
+          ) : null
+        }
+      </Card >
+      <AddTaskModal  pet={props.pet} widget={props.widget} show={showAddTask} toggle={setShowAddTask} />
+    </React.Fragment>
   )
 }
 

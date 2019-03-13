@@ -4,10 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Container, Row, Col, Input, Button } from 'reactstrap'
 
-/** Controlers */
-import { todayTasks, foodTasks, beautyTasks, vermTasks, vacinaTasks, vetTasks, otherTasks } from '../controlers/get-taks'
-import { deleteFoodTask, deleteBeautyTask, deleteVermTask, deleteVacinaTask, deleteVetTask, deleteOtherTask } from '../controlers/delete-taks'
-
 /** Components */
 import Navegationbar from './navbar'
 import Widget from './dashboard-widget'
@@ -24,17 +20,9 @@ const currentDate = () => {
 
 /** Show dashboard */
 const Dashboard = () => {
-  /**Modals */
-  const [showAddPet, setShowAddPet] = useState(false) // Create new pet
-  const [showAddFoodTasks, setShowAddFoodTasks] = useState(false) // Create food tasks
-  const [showAddBeautyTasks, setShowAddBeautyTasks] = useState(false) // Create beauty tasks
-  const [showAddVermTasks, setShowAddVermTasks] = useState(false) // Create verms tasks
-  const [showAddVacinaTasks, setShowAddVacinaTasks] = useState(false) // Create vacina tasks
-  const [showAddVetTasks, setShowAddVetTasks] = useState(false) // Create vet tasks
-  const [showAddOtherTasks, setShowAddOtherTasks] = useState(false) // Create other tasks
+  const [showAddPet, setShowAddPet] = useState(false) // Modal create new pet
+  const [selectedPet, setSelectedPet] = useState(null) // Select pet
 
-  /** Select pet */
-  const [selectedPet, setSelectedPet] = useState(null)
   return (
     <Container fluid className='bg-light' style={{ minHeight: '100vh' }}>
       <Navegationbar />
@@ -64,35 +52,29 @@ const Dashboard = () => {
       ) : (
           <Row>
             <Col md={{ size: 6 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title={`hoje ${currentDate()}`} data={todayTasks()} buttonAdd={null} buttonDelete={null} />
+              <Widget title={`hoje ${currentDate()}`} pet={selectedPet} widget='today' noButton={true} />
             </Col>
             <Col md={{ size: 3 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title="alimentação" data={foodTasks()} buttonAdd={() => setShowAddFoodTasks(true)} buttonDelete={deleteFoodTask} />
+              <Widget title="alimentação" pet={selectedPet} widget='food' />
             </Col>
             <Col md={{ size: 3 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title="banho e tosa" data={beautyTasks()} buttonAdd={() => setShowAddBeautyTasks(true)} buttonDelete={deleteBeautyTask} />
+              <Widget title="banho e tosa" pet={selectedPet} widget='beauty' />
             </Col>
             <Col md={{ size: 3 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title="vermifugação" data={vermTasks()} buttonAdd={() => setShowAddVermTasks(true)} buttonDelete={deleteVermTask} />
+              <Widget title="vermifugação" pet={selectedPet} widget='verm' />
             </Col>
             <Col md={{ size: 3 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title="vacinação" data={vacinaTasks()} buttonAdd={() => setShowAddVacinaTasks(true)} buttonDelete={deleteVacinaTask} />
+              <Widget title="vacinação" pet={selectedPet} widget='vacina' />
             </Col>
             <Col md={{ size: 3 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title="visitas ao veterinário" data={vetTasks()} buttonAdd={() => setShowAddVetTasks(true)} buttonDelete={deleteVetTask} />
+              <Widget title="visitas ao veterinário" pet={selectedPet} widget='vet' />
             </Col>
             <Col md={{ size: 3 }} xs={{ size: 12 }} style={{ padding: 15 }}>
-              <Widget title="outros" data={otherTasks()} buttonAdd={() => setShowAddOtherTasks(true)} buttonDelete={deleteOtherTask} />
+              <Widget title="outros" pet={selectedPet} widget='other' />
             </Col>
           </Row>
         )}
       <AddPetModal show={showAddPet} toggle={setShowAddPet} />
-      <AddPetModal show={showAddFoodTasks} toggle={setShowAddFoodTasks} />
-      <AddPetModal show={showAddBeautyTasks} toggle={setShowAddBeautyTasks} />
-      <AddPetModal show={showAddVermTasks} toggle={setShowAddVermTasks} />
-      <AddPetModal show={showAddVacinaTasks} toggle={setShowAddVacinaTasks} />
-      <AddPetModal show={showAddVetTasks} toggle={setShowAddVetTasks} />
-      <AddPetModal show={showAddOtherTasks} toggle={setShowAddOtherTasks} />
     </Container>
   )
 }

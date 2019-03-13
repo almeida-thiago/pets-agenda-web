@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from "react-router-dom"
-import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Button } from 'reactstrap';
+import { Container, Row, Col, Card, CardHeader, CardBody, Form, FormGroup, Input, Button } from 'reactstrap'
 
-const Login = (props) => {
+const Login = () => {
   return (
     <Container fluid className='bg-light'>
       <Row style={{ height: '100vh', display: 'flex', alignItems: 'center' }}>
@@ -14,7 +14,7 @@ const Login = (props) => {
                 <Row form>
                   <Col>
                     <FormGroup>
-                      <Input type="email" name="email" placeholder="Login" style={{ borderRadius: 0 }} />
+                      <Input type="email" name="email" placeholder="Login" autofocus="true" style={{ borderRadius: 0 }} />
                     </FormGroup>
                   </Col>
                 </Row>

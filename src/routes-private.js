@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Redirect } from "react-router-dom"
 
 const isLogged = () => {
-  return false
+  return true
 }
 
 const MainRouter = (props) => 

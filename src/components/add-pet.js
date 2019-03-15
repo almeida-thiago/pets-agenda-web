@@ -2,14 +2,14 @@ import React from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Button, Form, FormGroup, Label, Input } from 'reactstrap'
 
 /** Controlers */
-import createPet from '../controlers/crud-pet'
+import { createPet } from '../controllers/crud-pet'
 
 /** Modal add new pet */
 const AddPetModal = (props) => (
   <Modal isOpen={props.show} toggle={() => props.toggle(false)} autoFocus>
-    <ModalHeader toggle={() => props.toggle(false)} className="text-center text-uppercase font-weight-light">Novo pet</ModalHeader>
-    <ModalBody>
-      <Form>
+    <Form onSubmit={(event) => { createPet(event).then(props.update(true)) }}>
+      <ModalHeader toggle={() => props.toggle(false)} className="text-center text-uppercase font-weight-light">Novo pet</ModalHeader>
+      <ModalBody>
         <Row form>
           <Col md="8" xs="12">
             <FormGroup>
@@ -20,7 +20,7 @@ const AddPetModal = (props) => (
           <Col md="4" xs="12">
             <FormGroup>
               <Label for="petSpecies">Espécie:</Label>
-              <Input type="select" name="type" id="petSpecies" style={{ borderRadius: 0 }}>
+              <Input type="select" name="specie" id="petSpecies" style={{ borderRadius: 0 }}>
                 <option value="dog">Canino</option>
                 <option value="cat">Felino</option>
                 <option value="other">Outro</option>
@@ -28,12 +28,12 @@ const AddPetModal = (props) => (
             </FormGroup>
           </Col>
         </Row>
-      </Form>
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" onClick={() => null} style={{ borderRadius: 0 }}>Criar</Button>
-      <Button color="secondary" onClick={() => props.toggle(false)} style={{ borderRadius: 0 }}>Cancelar</Button>
-    </ModalFooter>
+      </ModalBody>
+      <ModalFooter>
+        <Button type="submit" color="primary" onClick={() => props.toggle(false)} style={{ borderRadius: 0 }}>Criar</Button>
+        <Button color="secondary" onClick={() => props.toggle(false)} style={{ borderRadius: 0 }}>Cancelar</Button>
+      </ModalFooter>
+    </Form>
   </Modal>
 )
 

@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Container, Row, Col, Input, Button } from 'reactstrap'
+
+/** Controllers */
+import { listPets, deletePet } from '../controllers/crud-pet'
 
 /** Components */
 import Navegationbar from './navbar'
@@ -18,10 +21,32 @@ const currentDate = () => {
   return date
 }
 
+/** List pets */
+const petsList = async (select) => {
+  const pets = await listPets()
+  const petsList = []
+  pets.forEach(pet => {
+    petsList.push((<option key={pet._id} value={pet._id} defaultValue={select === pet.id ? true : false}>{pet.name}</option>))
+  })
+  return petsList
+}
+
 /** Show dashboard */
 const Dashboard = () => {
   const [showAddPet, setShowAddPet] = useState(false) // Modal create new pet
   const [selectedPet, setSelectedPet] = useState(null) // Select pet
+  const [listPet, setlistPet] = useState([]) // Pets list
+  const [updateList, setUpdateList] = useState(true) // List update
+
+  /** Side effects */
+  useEffect(() => {
+    if (updateList) petsList(selectedPet).then(
+      data => {
+        setlistPet(data)
+      }
+    )
+    setUpdateList(false)
+  })
 
   return (
     <Container fluid className='bg-light' style={{ minHeight: '100vh' }}>
@@ -30,8 +55,7 @@ const Dashboard = () => {
         <Col>
           <Input bsSize="sm" type="select" name="select" id="exampleSelect" onChange={(event) => setSelectedPet(event.target.value)} style={{ borderRadius: 0 }}>
             {!selectedPet ? (<option>Selecione um animal</option>) : null}
-            <option value="1" defaultValue={selectedPet === '1' ? true : false}>Cacorro</option>
-            <option value="2" defaultValue={selectedPet === '2' ? true : false}>gato</option>
+            {listPet}
           </Input>
         </Col>
         <Col xs="auto">
@@ -40,7 +64,7 @@ const Dashboard = () => {
           </Button>
         </Col>
         <Col xs="auto">
-          <Button color="danger" size="sm" disabled={selectedPet === null ? true : false} onClick={() => alert(selectedPet)} style={{ borderRadius: 0 }}>
+          <Button color="danger" size="sm" disabled={selectedPet === null ? true : false} onClick={() => { deletePet(selectedPet); setSelectedPet(null); setUpdateList(true) }} style={{ borderRadius: 0 }}>
             <FontAwesomeIcon icon="trash" />
           </Button>
         </Col>
@@ -74,7 +98,7 @@ const Dashboard = () => {
             </Col>
           </Row>
         )}
-      <AddPetModal show={showAddPet} toggle={setShowAddPet} />
+      <AddPetModal show={showAddPet} toggle={setShowAddPet} update={setUpdateList} />
     </Container>
   )
 }

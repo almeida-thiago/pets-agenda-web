@@ -2,14 +2,14 @@ import React from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Col, Button, Form, FormGroup, Label, Input } from 'reactstrap'
 
 /** Controlers */
-import { createTask } from '../controlers/crud-task'
+import { createTask } from '../controllers/crud-task'
 
 /** Modal add new pet */
 const AddPetModal = (props) => (
   <Modal isOpen={props.show} toggle={() => props.toggle(false)} autoFocus>
-    <ModalHeader toggle={() => props.toggle(false)} className="text-center text-uppercase font-weight-light">Novo agendamento</ModalHeader>
-    <ModalBody>
-      <Form>
+    <Form onSubmit={(event) => { createTask(event, props.pet, props.widget); props.update(true) }}>
+      <ModalHeader toggle={() => props.toggle(false)} className="text-center text-uppercase font-weight-light">Novo agendamento</ModalHeader>
+      <ModalBody>
         <Row form>
           <Col md="5" xs="8">
             <FormGroup>
@@ -27,12 +27,12 @@ const AddPetModal = (props) => (
             <FormGroup>
               <Label for="petSpecies">Repetir:</Label>
               <Input type="select" name="repeat" id="taskRepeat" style={{ borderRadius: 0 }}>
-                <option value={null}>Não</option>
-                <option value="weekly">Semanal</option>
-                <option value="biweekly">Quinzenal</option>
-                <option value="monthly">Mensal</option>
-                <option value="halfYear">Semestral</option>
-                <option value="yearly">Anual</option>
+                <option value="0">Não</option>
+                <option value="weekly">1 semana</option>
+                <option value="biweekly">15 dias</option>
+                <option value="monthly">1 mês</option>
+                <option value="halfYear">1 semestre</option>
+                <option value="yearly">1 ano</option>
               </Input>
             </FormGroup>
           </Col>
@@ -41,16 +41,16 @@ const AddPetModal = (props) => (
           <Col xs="12">
             <FormGroup>
               <Label for="taskTitle">Descrição:</Label>
-              <Input type="textarea" name="title" placeholder="Descrição" id="taskTitle" style={{ borderRadius: 0 }} />
+              <Input type="textarea" name="description" placeholder="Descrição" id="taskTitle" style={{ borderRadius: 0 }} />
             </FormGroup>
           </Col>
         </Row>
-      </Form>
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" onClick={() => null} style={{ borderRadius: 0 }}>Criar</Button>
-      <Button color="secondary" onClick={() => props.toggle(false)} style={{ borderRadius: 0 }}>Cancelar</Button>
-    </ModalFooter>
+      </ModalBody>
+      <ModalFooter>
+        <Button type="submit" color="primary" onClick={() => props.toggle(false)} style={{ borderRadius: 0 }}>Criar</Button>
+        <Button color="secondary" onClick={() => props.toggle(false)} style={{ borderRadius: 0 }}>Cancelar</Button>
+      </ModalFooter>
+    </Form>
   </Modal>
 )
 

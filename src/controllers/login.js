@@ -9,6 +9,23 @@ const disableForm = (target, status) => {
   if (status === false) target.password.select()
 }
 
+/** Create new user */
+const create = async (event, history) => {
+  event.preventDefault()
+  if (event.target.password.value === event.target['password-confirm'].value) {
+    const username = event.target.email.value
+    const password = event.target.password.value
+    await axios.post(`${configs.apiUrl}/user `, { username, password })
+    const loginData = await axios.post(`${configs.apiUrl}/login`, { username, password }) // Login
+    const localData = { ...loginData.data } // Parse login data
+    delete localData.success // Delete unecessary data
+    localStorage.setItem('PETS_AGENDA', JSON.stringify(localData)) // Save login data in local storage
+    if (loginData.data.success) history.push('/dashboard')
+  } else {
+    alert('A senha e a confirmação da senha não coincidem.')
+  }
+}
+
 /** Login application */
 const login = async (event, history, message) => {
   event.preventDefault()
@@ -43,4 +60,4 @@ const logout = (history) => {
   history.push('/login')
 }
 
-export { login, revalidate, logout }
+export { create, login, revalidate, logout }
